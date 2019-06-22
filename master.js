@@ -29,23 +29,23 @@ function init(){
     ] ); */
 
     // load a texture, set wrap mode to repeat
-    //var texture = new THREE.TextureLoader().load( "src/textures/tapeteRealSize.png" );
+    var texture = new THREE.TextureLoader().load( "src/textures/tapeteRealSize.png" );
     
 
     //set propierties cube
-    var cubeInit = new THREE.Mesh(new THREE.BoxGeometry( 20, 20, 20), new THREE.MeshBasicMaterial( { color: 0xffffff } ));
+    var cubeBase = new THREE.Mesh(new THREE.BoxGeometry( 40, 0, 40), new THREE.MeshBasicMaterial( { color: 0xffffff, map: texture } ));
 
     //Init position 
-    cubeInit.position.x = 0;
-    cubeInit.position.y = 0;
-    cubeInit.position.z = 0;
+    cubeBase.position.x = 0;
+    cubeBase.position.y = 0;
+    cubeBase.position.z = 0;
 
     //Add cube to scene
-    scene.add(cubeInit);
+    scene.add(cubeBase);
 
     //Coor position camera
     camera.position.y = 0;
-    camera.position.z = 1000;
+    camera.position.z = 100;
     camera.position.x = 0;
 
     renderer.render( scene, camera );
@@ -67,28 +67,28 @@ function animate() {
 
     if (acelerationX != 0) {
         if (acelerationX < 0) {
-            acelerationX = acelerationX + 0.5;
+            acelerationX = acelerationX + 0.1;
         }
         if (acelerationX > 0) {
-            acelerationX = acelerationX - 0.5;
+            acelerationX = acelerationX - 0.1;
         }
     }
 
     if (acelerationY != 0) {
         if (acelerationY < 0) {
-            acelerationY = acelerationY + 0.5;
+            acelerationY = acelerationY + 0.1;
         }
         if (acelerationY > 0) {
-            acelerationY = acelerationY - 0.5;
+            acelerationY = acelerationY - 0.1;
         }
     }
 
     if (acelerationZ != 0) {
         if (acelerationZ < 0) {
-            acelerationZ = acelerationZ + 0.5;
+            acelerationZ = acelerationZ + 0.1;
         }
         if (acelerationZ > 0) {
-            acelerationZ = acelerationZ - 0.5;
+            acelerationZ = acelerationZ - 0.1;
         }
     }
 
@@ -100,33 +100,55 @@ function animate() {
 
 }
 
-document.addEventListener("keydown", keyDownEvent, false);
+document.addEventListener("keydown", ControllersCamera, false);
 
 //function dev inspect
-function keyDownEvent(event){
+function ControllersCamera(event){
     var keyCode = event.which;
     //Key A
     if (keyCode == 65) {
-        acelerationX = -10;
+        acelerationX = -0.5;
     }
     //Key W
     if (keyCode == 87) {
-        acelerationY = 10;
+        acelerationY = 0.5;
     }
     //Key D
     if (keyCode == 68) {
-        acelerationX = 10;
+        acelerationX = 0.5;
     }
     //Key S
     if (keyCode == 83) {
-        acelerationY = -10;
+        acelerationY = -0.5;
     }
     //Key Q
     if (keyCode == 81) {
-        acelerationZ = -10;
+        acelerationZ = -0.5;
     }
     //Key E
     if (keyCode == 69) {
-        acelerationZ = 10;
+        acelerationZ = 0.5;
+    }
+    //Key SPACE
+    if (keyCode == 32) {
+        acelerationZ = 0;
+        acelerationY = 0;
+        acelerationX = 0;
+    }
+    //Key 1 NumPad
+    if (keyCode == 101) {
+        camera.rotation.x = camera.rotation.x - 0.1;
+    }
+    //Key 2 NumPad
+    if (keyCode == 99) {
+        camera.rotation.y = camera.rotation.y - 0.1;
+    }
+    //Key 3 NumPad
+    if (keyCode == 98) {
+        camera.rotation.x = camera.rotation.x + 0.1;
+    }
+    //Key 5 NumPad
+    if (keyCode == 97) {
+        camera.rotation.y = camera.rotation.y + 0.1;
     }
 }
