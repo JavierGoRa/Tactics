@@ -1,28 +1,32 @@
 var scene, camera, renderer;
+var arrow;
 var person;
-/* 
-var velocityX = 0;
-var velocityY = 0;
-var velocityZ = 0;
-var acelerationX = 0;
-var acelerationY = 0;
-var acelerationZ = 0; */
+var character;
+var board;
+var texture;
+var menuBattle;
+var codeSelector = 2;
 
 init();
 animate();
 
-function setPositionPerson(posX, posZ){
+function setPositionArrow(posX, posZ){
     if (Math.sign(posX) == -1) { 
-        person.position.x = 2 * posX + 1;
+        arrow.position.x = 2 * posX + 1;
     } else { 
-        person.position.x = 2 * posX - 1;
+        arrow.position.x = 2 * posX - 1;
     };
 
     if (Math.sign(posZ) == -1) { 
-        person.position.z = 2 * posZ + 1;
+        arrow.position.z = 2 * posZ + 1;
     } else { 
-        person.position.z = 2 * posZ - 1;
+        arrow.position.z = 2 * posZ - 1;
     };
+}
+
+function setPositionPerson(character){
+    character.position.x = arrow.position.x;
+    character.position.z = arrow.position.z;
 }
 
 function init(){
@@ -34,27 +38,33 @@ function init(){
     document.body.appendChild( renderer.domElement );
 
     // load a texture, set wrap mode to repeat
-    var texture = new THREE.TextureLoader().load( "src/textures/tapeteRealSize.png" );
-    
+    texture = new THREE.TextureLoader().load( "src/textures/tapeteRealSize.png" );
 
     //set propierties cube
-    var cubeBase = new THREE.Mesh(new THREE.BoxGeometry( 40, 0, 40), new THREE.MeshBasicMaterial( { color: 0xffffff, map: texture } ));
+    board = new THREE.Mesh(new THREE.BoxGeometry( 40, 0, 40), new THREE.MeshBasicMaterial( { color: 0xffffff, map: texture } ));
 
-    person = new THREE.Mesh(new THREE.BoxGeometry( 1, 5, 1), new THREE.MeshBasicMaterial( { color: 0x666666 } ));
+    arrow = new THREE.Mesh(new THREE.BoxGeometry( 1, 5, 1), new THREE.MeshBasicMaterial( { color: 0x666666 } ));
+    person = new THREE.Mesh(new THREE.BoxGeometry( 1, 7, 1), new THREE.MeshBasicMaterial( { color: 0x006666 } ));
 
-    setPositionPerson(1, 1);
+    character = person;
+
+    setPositionArrow(1, 1);
 
     /* person.position.x = 9;
     person.position.z = -5; */
-    person.position.y = 1;
+    arrow.position.y = 3;
 
     //Init position 
-    cubeBase.position.x = 0;
-    cubeBase.position.y = 0;
-    cubeBase.position.z = 0;
+    board.position.x = 0;
+    board.position.y = 0;
+    board.position.z = 0;
+
+    person.position.x = 5;
+    person.position.z = 5;
 
     //Add cube to scene
-    scene.add(cubeBase);
+    scene.add(board);
+    scene.add(arrow);
     scene.add(person);
 
     //Coor position camera
@@ -65,6 +75,31 @@ function init(){
     camera.rotation.x = -0.7;
 
     renderer.render( scene, camera );
+
+    generateMenuBattle();
+
+}
+
+function generateMenuBattle(){
+
+    texture = new THREE.TextureLoader().load( "src/textures/menuBattleBoard.png" );
+    menuBattle = new THREE.Mesh(new THREE.BoxGeometry( 20, 15, 0), new THREE.MeshBasicMaterial( { color: 0xffffff, map: texture } ));
+
+    menuBattle.position.x = 0;
+    menuBattle.position.y = 25;
+
+    scene.add(menuBattle);
+
+    texture = new THREE.TextureLoader().load( "src/textures/menuBattleSelector.png" );
+    selectorMenuBattle = new THREE.Mesh(new THREE.BoxGeometry( 20, 5, 0), new THREE.MeshBasicMaterial( { color: 0xffffff,transparent: true, map: texture } ));
+
+    selectorMenuBattle.position.x = 0;
+    selectorMenuBattle.position.y = menuBattle.position.y + 5;
+    selectorMenuBattle.position.z = 0.5;
+
+    scene.add(selectorMenuBattle);
+
+    renderer.render(scene);
 
 }
 
@@ -112,39 +147,69 @@ function animate() {
 
 }
 
-document.addEventListener("keydown", ControllersCamera, false);
+//listener to change screen size
+window.addEventListener( 'resize', onWindowResize, false );
 
-//function dev inspect
-function ControllersCamera(event){
+document.addEventListener("keydown", controllersCursorOnBoard, false);
+
+//function catch key to cursor on board
+function controllersCursorOnBoard(event){
     var keyCode = event.which;
     //Key A
     if (keyCode == 65) {
-        person.position.x = person.position.x - 2;
+        arrow.position.x = arrow.position.x - 2;
     }
     //Key W
     if (keyCode == 87) {
-        person.position.z = person.position.z - 2;
+        arrow.position.z = arrow.position.z - 2;
     }
     //Key D
     if (keyCode == 68) {
-        person.position.x = person.position.x + 2;
+        arrow.position.x = arrow.position.x + 2;
     }
     //Key S
     if (keyCode == 83) {
-        person.position.z = person.position.z + 2;
+        arrow.position.z = arrow.position.z + 2;
     }
-    //Key Q
-    if (keyCode == 81) {
-        acelerationZ = -0.5;
+    //Key O
+    if (keyCode == 79) {
+        document.removeEventListener("keydown", controllersCursorOnBoard, false);
+        document.addEventListener("keydown", controllersCursorOnMenuBattle, false);
+        codeSelector = 2;
+        selectorMenuBattle.position.y = codeSelector * 5 + 20;
     }
-    //Key E
-    if (keyCode == 69) {
-        acelerationZ = 0.5;
+}
+
+//function catch key to cursor on the battle menu
+function controllersCursorOnMenuBattle(event){
+    var keyCode = event.which;
+    //Key W
+    if (keyCode == 87) {
+        if (codeSelector != 2) {
+            codeSelector ++;
+            selectorMenuBattle.position.y = codeSelector * 5 + 20;
+        }
     }
-    //Key SPACE
-    if (keyCode == 32) {
-        acelerationZ = 0;
-        acelerationY = 0;
-        acelerationX = 0;
+    //Key S
+    if (keyCode == 83) {
+        if (codeSelector != 0) {
+            codeSelector --;
+            selectorMenuBattle.position.y = codeSelector * 5 + 20;
+        }    
     }
+    //Key O
+    if (keyCode == 79) {
+        if (codeSelector == 2) {
+            document.removeEventListener("keydown", controllersCursorOnMenuBattle, false);
+            setPositionPerson(character);
+            document.addEventListener("keydown", controllersCursorOnBoard, false);    
+        }
+    }
+
+}
+
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize( window.innerWidth, window.innerHeight );
 }
