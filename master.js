@@ -1,3 +1,9 @@
+/*
+    * Author: Javier González
+    * Email: javigoracontact@gmail.com
+    * Copyright 2019
+*/
+
 var scene, camera, renderer;
 var arrow;
 var person;
@@ -6,6 +12,8 @@ var board;
 var texture;
 var menuBattle;
 var codeSelector = 2;
+var arrowOnX, arrowOnZ;
+var velocityMove;
 
 init();
 animate();
@@ -22,11 +30,6 @@ function setPositionArrow(posX, posZ){
     } else { 
         arrow.position.z = 2 * posZ - 1;
     };
-}
-
-function setPositionPerson(character){
-    character.position.x = arrow.position.x;
-    character.position.z = arrow.position.z;
 }
 
 function init(){
@@ -48,10 +51,8 @@ function init(){
 
     character = person;
 
-    setPositionArrow(1, 1);
+    //setPositionArrow(1, 1);
 
-    /* person.position.x = 9;
-    person.position.z = -5; */
     arrow.position.y = 3;
 
     //Init position 
@@ -61,6 +62,9 @@ function init(){
 
     person.position.x = 5;
     person.position.z = 5;
+
+    arrow.position.x = person.position.x;
+    arrow.position.z = person.position.z;
 
     //Add cube to scene
     scene.add(board);
@@ -103,47 +107,53 @@ function generateMenuBattle(){
 
 }
 
-//animation camera
+//animation arrow
 function animate() {
 
     requestAnimationFrame(animate);
 
-    /* velocityX = acelerationX;
-    velocityY = acelerationY;
-    velocityZ = acelerationZ;
+    arrow.rotation.y = arrow.rotation.y + 0.03;
 
-    camera.position.y += velocityY;
-    camera.position.z += velocityZ;
-    camera.position.x += velocityX; */
+    renderer.render(scene,camera);
 
-    /* if (acelerationX != 0) {
-        if (acelerationX < 0) {
-            acelerationX = acelerationX + 0.1;
+}
+
+//animation move person
+function animateMovePersonToArrow() {
+    requestAnimationFrame(animateMovePersonToArrow);
+    if (person.position.x == arrowOnX && person.position.z == arrowOnZ) {
+
+        velocityMove = 0;
+        console.log('Aqui estoy');
+    
+    } else {
+
+        velocityMove = 0.05;
+        console.log(' ');
+        console.log(arrowOnX);
+        console.log(arrowOnZ);
+        console.log(person.position.x);
+        console.log(person.position.z);
+
+        if (person.position.x != arrowOnX) {
+            
+            if (person.position.x > arrowOnX){
+                person.position.x = arrowOnX;
+            } else if (person.position.x < arrowOnX){
+                person.position.x = arrowOnX;
+            }
+
+        } else if (person.position.z != arrowOnZ) {
+            
+            if (person.position.z > arrowOnZ){
+                person.position.z = arrowOnZ;
+            } else if (person.position.z < arrowOnZ){
+                person.position.z = arrowOnZ;
+            }
+
         }
-        if (acelerationX > 0) {
-            acelerationX = acelerationX - 0.1;
-        }
+
     }
-
-    if (acelerationY != 0) {
-        if (acelerationY < 0) {
-            acelerationY = acelerationY + 0.1;
-        }
-        if (acelerationY > 0) {
-            acelerationY = acelerationY - 0.1;
-        }
-    }
-
-    if (acelerationZ != 0) {
-        if (acelerationZ < 0) {
-            acelerationZ = acelerationZ + 0.1;
-        }
-        if (acelerationZ > 0) {
-            acelerationZ = acelerationZ - 0.1;
-        }
-    } */
-
-    renderer.render( scene, camera );
 
 }
 
@@ -158,18 +168,22 @@ function controllersCursorOnBoard(event){
     //Key A
     if (keyCode == 65) {
         arrow.position.x = arrow.position.x - 2;
+        console.log(arrow.position.x);
     }
     //Key W
     if (keyCode == 87) {
         arrow.position.z = arrow.position.z - 2;
+        console.log(arrow.position.z);
     }
     //Key D
     if (keyCode == 68) {
         arrow.position.x = arrow.position.x + 2;
+        console.log(arrow.position.x);
     }
     //Key S
     if (keyCode == 83) {
         arrow.position.z = arrow.position.z + 2;
+        console.log(arrow.position.z);
     }
     //Key O
     if (keyCode == 79) {
@@ -178,9 +192,15 @@ function controllersCursorOnBoard(event){
         codeSelector = 2;
         selectorMenuBattle.position.y = codeSelector * 5 + 20;
     }
+    
+    //Key SPACE
+    /* if (keyCode == 32) {
+        cancelAnimationFrame(requestAnimationFrame(animateMovePersonToArrow));
+    } */
+    
 }
 
-//function catch key to cursor on the battle menu
+//function catch key to cursor on battle menu
 function controllersCursorOnMenuBattle(event){
     var keyCode = event.which;
     //Key W
@@ -201,7 +221,11 @@ function controllersCursorOnMenuBattle(event){
     if (keyCode == 79) {
         if (codeSelector == 2) {
             document.removeEventListener("keydown", controllersCursorOnMenuBattle, false);
-            setPositionPerson(character);
+
+            arrowOnX = arrow.position.x;
+            arrowOnZ = arrow.position.z;
+
+            animateMovePersonToArrow();
             document.addEventListener("keydown", controllersCursorOnBoard, false);    
         }
     }

@@ -11,6 +11,9 @@ function createWindow () {
       nodeIntegration: true
     }
   })
+  
+  //Remove menu bar from electron window
+  mainWindow.setMenuBarVisibility(false);
 
   mainWindow.loadFile('index.html')
 
