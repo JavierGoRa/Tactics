@@ -107,7 +107,7 @@ function generateMenuBattle(){
 
 }
 
-//animation arrow
+//Animation arrow
 function animate() {
 
     requestAnimationFrame(animate);
@@ -120,7 +120,7 @@ function animate() {
 
 //animation move person
 function animateMovePersonToArrow() {
-    requestAnimationFrame(animateMovePersonToArrow);
+        
     if (person.position.x == arrowOnX && person.position.z == arrowOnZ) {
 
         velocityMove = 0;
@@ -128,30 +128,31 @@ function animateMovePersonToArrow() {
     
     } else {
 
-        velocityMove = 0.05;
-        console.log(' ');
-        console.log(arrowOnX);
-        console.log(arrowOnZ);
-        console.log(person.position.x);
-        console.log(person.position.z);
+        velocityMove = 0.25;
 
         if (person.position.x != arrowOnX) {
             
             if (person.position.x > arrowOnX){
-                person.position.x = arrowOnX;
+                person.position.x -= velocityMove;
             } else if (person.position.x < arrowOnX){
-                person.position.x = arrowOnX;
+                person.position.x += velocityMove;
             }
 
         } else if (person.position.z != arrowOnZ) {
             
             if (person.position.z > arrowOnZ){
-                person.position.z = arrowOnZ;
+                person.position.z -= velocityMove;
             } else if (person.position.z < arrowOnZ){
-                person.position.z = arrowOnZ;
+                person.position.z += velocityMove;
             }
 
         }
+
+        console.log(' ');
+        console.log(person.position.x);
+        console.log(person.position.z);
+        
+            requestAnimationFrame(animateMovePersonToArrow)
 
     }
 
@@ -226,6 +227,7 @@ function controllersCursorOnMenuBattle(event){
             arrowOnZ = arrow.position.z;
 
             animateMovePersonToArrow();
+            
             document.addEventListener("keydown", controllersCursorOnBoard, false);    
         }
     }

@@ -1,0 +1,194 @@
+{
+    "battle":{
+        "equip1": {
+            "member1": {
+                "id": 1,
+                "name": "LeBron",
+                "class": "Hunter",
+                "level": 5,
+                "exp": 35,
+                "vit": 100,
+                "pm": 30,
+                "status": null,
+                "movility": 4,
+                "jump": 2,
+                "evade": 5,
+                "speed": 59,
+                "atphi": 36,
+                "dephi": 43,
+                "pomag": 17,
+                "demag": 25,
+                "equip":["bow"],
+                "habilities":{
+                    "mainAction":{ 
+                        "name": "Archery",
+                        "habilities": ["Accumulate", "Immobilize"]
+                    },
+                    "secondAction":{ 
+                        "name": "Battle technique",
+                        "habilities": ["First aid"]
+                    },
+                    "reaction": "Counter attack",
+                    "support": "Spiritual peace"
+                }
+            },
+            "member2": {
+                "id": 2,
+                "name": "Leonard",
+                "class": "Hunter",
+                "level": 5,
+                "exp": 35,
+                "vit": 100,
+                "pm": 30,
+                "status": null,
+                "movility": 4,
+                "jump": 2,
+                "evade": 5,
+                "speed": 59,
+                "atphi": 36,
+                "dephi": 43,
+                "pomag": 17,
+                "demag": 25,
+                "equip":["bow"],
+                "habilities":{
+                    "mainAction":{ 
+                        "name": "Archery",
+                        "habilities": ["Accumulate", "Immobilize"]
+                    },
+                    "secondAction":{ 
+                        "name": "Battle technique",
+                        "habilities": ["First aid"]
+                    },
+                    "reaction": "Counter attack",
+                    "support": "Spiritual peace"
+                }
+            },
+            "member3": {
+                "id": 3,
+                "name": "Ingram",
+                "class": "Hunter",
+                "level": 5,
+                "exp": 35,
+                "vit": 100,
+                "pm": 30,
+                "status": null,
+                "movility": 4,
+                "jump": 2,
+                "evade": 5,
+                "speed": 59,
+                "atphi": 36,
+                "dephi": 43,
+                "pomag": 17,
+                "demag": 25,
+                "equip":["bow"],
+                "habilities":{
+                    "mainAction":{ 
+                        "name": "Archery",
+                        "habilities": ["Accumulate", "Immobilize"]
+                    },
+                    "secondAction":{ 
+                        "name": "Battle technique",
+                        "habilities": ["First aid"]
+                    },
+                    "reaction": "Counter attack",
+                    "support": "Spiritual peace"
+                }
+            }
+        },
+        "equip2": {
+            "member1": {
+                "id": 4,
+                "name": "LeBron",
+                "class": "Hunter",
+                "level": 5,
+                "exp": 35,
+                "vit": 100,
+                "pm": 30,
+                "status": null,
+                "movility": 4,
+                "jump": 2,
+                "evade": 5,
+                "speed": 59,
+                "atphi": 36,
+                "dephi": 43,
+                "pomag": 17,
+                "demag": 25,
+                "equip":["bow"],
+                "habilities":{
+                    "mainAction":{ 
+                        "name": "Archery",
+                        "habilities": ["Accumulate", "Immobilize"]
+                    },
+                    "secondAction":{ 
+                        "name": "Battle technique",
+                        "habilities": ["First aid"]
+                    },
+                    "reaction": "Counter attack",
+                    "support": "Spiritual peace"
+                }
+            },
+            "member2": {
+                "id": 5,
+                "name": "Leonard",
+                "class": "Hunter",
+                "level": 5,
+                "exp": 35,
+                "vit": 100,
+                "pm": 30,
+                "status": null,
+                "movility": 4,
+                "jump": 2,
+                "evade": 5,
+                "speed": 59,
+                "atphi": 36,
+                "dephi": 43,
+                "pomag": 17,
+                "demag": 25,
+                "equip":["bow"],
+                "habilities":{
+                    "mainAction":{ 
+                        "name": "Archery",
+                        "habilities": ["Accumulate", "Immobilize"]
+                    },
+                    "secondAction":{ 
+                        "name": "Battle technique",
+                        "habilities": ["First aid"]
+                    },
+                    "reaction": "Counter attack",
+                    "support": "Spiritual peace"
+                }
+            },
+            "member3": {
+                "id": 6,
+                "name": "Ingram",
+                "class": "Hunter",
+                "level": 5,
+                "exp": 35,
+                "vit": 100,
+                "pm": 30,
+                "status": null,
+                "movility": 4,
+                "jump": 2,
+                "evade": 5,
+                "speed": 59,
+                "atphi": 36,
+                "dephi": 43,
+                "pomag": 17,
+                "demag": 25,
+                "equip":["bow"],
+                "habilities":{
+                    "mainAction":{ 
+                        "name": "Archery",
+                        "habilities": ["Accumulate", "Immobilize"]
+                    },
+                    "secondAction":{ 
+                        "name": "Battle technique",
+                        "habilities": ["First aid"]
+                    },
+                    "reaction": "Counter attack",
+                    "support": "Spiritual peace"
+                }
+            }
+        }
+    }
+}
