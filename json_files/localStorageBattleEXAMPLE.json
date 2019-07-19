@@ -1,7 +1,10 @@
 {
     "battle":{
-        "equip1": {
+        "team1": {
             "member1": {
+                "defeat": false,
+                "posX":3,
+                "posY":3,
                 "id": 1,
                 "name": "LeBron",
                 "class": "Hunter",
@@ -33,6 +36,9 @@
                 }
             },
             "member2": {
+                "defeat": false,
+                "posX":1,
+                "posY":3,
                 "id": 2,
                 "name": "Leonard",
                 "class": "Hunter",
@@ -64,6 +70,9 @@
                 }
             },
             "member3": {
+                "defeat": false,
+                "posX":3,
+                "posY":1,
                 "id": 3,
                 "name": "Ingram",
                 "class": "Hunter",
@@ -95,8 +104,11 @@
                 }
             }
         },
-        "equip2": {
+        "team2": {
             "member1": {
+                "defeat": false,
+                "posX":-3,
+                "posY":-3,
                 "id": 4,
                 "name": "LeBron",
                 "class": "Hunter",
@@ -128,6 +140,9 @@
                 }
             },
             "member2": {
+                "defeat": false,
+                "posX":-3,
+                "posY":-1,
                 "id": 5,
                 "name": "Leonard",
                 "class": "Hunter",
@@ -159,6 +174,9 @@
                 }
             },
             "member3": {
+                "defeat": false,
+                "posX":-1,
+                "posY":-3,
                 "id": 6,
                 "name": "Ingram",
                 "class": "Hunter",

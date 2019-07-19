@@ -10,7 +10,7 @@ Execute this bash command on folder project.
 $ npm install
 ```
 
-Ignore node_modules folder, i´m stupid -.-.
+Ignore node_modules folder from my github -.-.
 
 ## Usage
 
@@ -34,10 +34,24 @@ execute app using electron with next command
 $ npm start
 ```
 
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+## Deployment
 
-Please make sure to update tests as appropriate.
+
+### Built With
+This app use:
+* [Node](https://nodejs.org/es/) - A cross-platform JavaScript run-time environment.
+* [Electron](https://electronjs.org/) - Build cross platform desktop apps with JavaScript, HTML, and CSS.
+* [Threejs](https://threejs.org/) - A cross-browser JavaScript library and Application Programming Interface (API) used to create and display animated 3D computer graphics in a web browser.
+
+
+## Authors
+
+* **Javier González Ramírez**
+
+
+# Contact
+
+Email: javigoracontact@gmail.com OR javigora97@gmail.com
 
 ## License
 [MIT]()

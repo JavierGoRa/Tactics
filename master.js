@@ -1,7 +1,8 @@
 /*
     * Author: Javier González
     * Email: javigoracontact@gmail.com
-    * Copyright 2019
+    * ALL RIGHT RESERVED Copyright 2019
+    * Project Tactics : https://docs.google.com/document/d/1ArXHVm_ad-tYH54TRrrvIFD9NAbwIv-tS5l5G3RD8Ew/edit?usp=sharing
 */
 
 var scene, camera, renderer;
@@ -92,16 +93,12 @@ function generateMenuBattle(){
     menuBattle.position.x = 0;
     menuBattle.position.y = 25;
 
-    scene.add(menuBattle);
-
     texture = new THREE.TextureLoader().load( "src/textures/menuBattleSelector.png" );
     selectorMenuBattle = new THREE.Mesh(new THREE.BoxGeometry( 20, 5, 0), new THREE.MeshBasicMaterial( { color: 0xffffff,transparent: true, map: texture } ));
 
     selectorMenuBattle.position.x = 0;
     selectorMenuBattle.position.y = menuBattle.position.y + 5;
     selectorMenuBattle.position.z = 0.5;
-
-    scene.add(selectorMenuBattle);
 
     renderer.render(scene);
 
@@ -124,8 +121,8 @@ function animateMovePersonToArrow() {
     if (person.position.x == arrowOnX && person.position.z == arrowOnZ) {
 
         velocityMove = 0;
-        console.log('Aqui estoy');
-    
+/*         console.log('Aqui estoy');
+ */    
     } else {
 
         velocityMove = 0.25;
@@ -148,11 +145,11 @@ function animateMovePersonToArrow() {
 
         }
 
-        console.log(' ');
+        /* console.log(' ');
         console.log(person.position.x);
-        console.log(person.position.z);
+        console.log(person.position.z); */
         
-            requestAnimationFrame(animateMovePersonToArrow)
+        requestAnimationFrame(animateMovePersonToArrow)
 
     }
 
@@ -169,22 +166,18 @@ function controllersCursorOnBoard(event){
     //Key A
     if (keyCode == 65) {
         arrow.position.x = arrow.position.x - 2;
-        console.log(arrow.position.x);
     }
     //Key W
     if (keyCode == 87) {
         arrow.position.z = arrow.position.z - 2;
-        console.log(arrow.position.z);
     }
     //Key D
     if (keyCode == 68) {
         arrow.position.x = arrow.position.x + 2;
-        console.log(arrow.position.x);
     }
     //Key S
     if (keyCode == 83) {
         arrow.position.z = arrow.position.z + 2;
-        console.log(arrow.position.z);
     }
     //Key O
     if (keyCode == 79) {
@@ -192,6 +185,8 @@ function controllersCursorOnBoard(event){
         document.addEventListener("keydown", controllersCursorOnMenuBattle, false);
         codeSelector = 2;
         selectorMenuBattle.position.y = codeSelector * 5 + 20;
+        scene.add(menuBattle);
+        scene.add(selectorMenuBattle);
     }
     
     //Key SPACE
@@ -228,7 +223,10 @@ function controllersCursorOnMenuBattle(event){
 
             animateMovePersonToArrow();
             
-            document.addEventListener("keydown", controllersCursorOnBoard, false);    
+            document.addEventListener("keydown", controllersCursorOnBoard, false);
+
+            scene.remove(menuBattle);
+            scene.remove(selectorMenuBattle);
         }
     }
 
