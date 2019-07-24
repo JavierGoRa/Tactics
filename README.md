@@ -14,16 +14,16 @@ Ignore node_modules folder from my github -.-.
 
 ## Usage
 
-U can execute app from browser using next command
-
-```bash
-$ http-server -c-1
-```
-
-Install before http-server with command:
+Install http-server with command:
 
 ```bash
 $ npm install -g http-server
+```
+
+And execute app from browser using next command
+
+```bash
+$ http-server -c-1
 ```
 
 OR
