@@ -89,6 +89,14 @@ function init(){
     scene.add(arrow);
     scene.add(person);
 
+    board.cursor = 'pointer';
+    board.on('click', function(){
+
+        console.log('hola');
+
+    });
+
+
     //Coor position camera
     camera.position.y = 50;
     camera.position.z = 50;
