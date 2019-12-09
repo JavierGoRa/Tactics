@@ -15,18 +15,10 @@ var menuBattle;
 var codeSelector = 2;
 var arrowOnX, arrowOnZ;
 var velocityMove;
+var raycaster, mouse;
 
 init();
 animate();
-
-//Creating the battlefield with a matrix
-var board = [];
-for (let x = 0; x < 20; x++) {
-    board[x] = [];
-    for (let y = 0; y < 20; y++) {
-        board[x][y] = 0;
-    }
-}
 
 
 function setPositionArrow(posX, posZ){
@@ -49,6 +41,8 @@ function checkBox(x, y){
     }
 }
 
+console.log(board);
+
 function init(){
     //create camera perspective and scene of window
     mainMenu = new THREE.Scene();
@@ -58,25 +52,41 @@ function init(){
     renderer.setSize( window.innerWidth, window.innerHeight );
     document.body.appendChild( renderer.domElement );
 
-    // load a texture, set wrap mode to repeat
-    texture = new THREE.TextureLoader().load( "src/textures/tapeteRealSize.png" );
 
     //set propierties cube
-    board = new THREE.Mesh(new THREE.BoxGeometry( 40, 0, 40), new THREE.MeshBasicMaterial( { color: 0xffffff, map: texture } ));
 
-    arrow = new THREE.Mesh(new THREE.BoxGeometry( 1, 5, 1), new THREE.MeshBasicMaterial( { color: 0x666666 } ));
+
+    //Creating the battlefield with a matrix
+    var board = [];
+    var color = 'black';
+    
+    for (let x = 0; x < 20; x++) {
+        board[x] = [];
+        (color == 'black') ? color = 'white' : color = 'black';
+        
+        for (let y = 0; y < 20; y++) {
+            // load a texture, set wrap mode to repeat
+            texture = new THREE.TextureLoader().load( "src/textures/" + color + ".png" );
+            cube = new THREE.Mesh(new THREE.BoxGeometry( 1, 0, 1), new THREE.MeshBasicMaterial( { color: 0xffffff, map: texture } ));
+
+            board[x][y] = 'hello';
+            
+            cube.position.x = x;
+            cube.position.y = 10;
+            cube.position.z = y;
+
+            scene.add(cube);
+            (color == 'black') ? color = 'white' : color = 'black';
+
+        }
+    }
+
+    arrow = new THREE.Mesh(new THREE.BoxGeometry( 0.5, 5, 0.5), new THREE.MeshBasicMaterial( { color: 0x666666 } ));
     person = new THREE.Mesh(new THREE.BoxGeometry( 1, 7, 1), new THREE.MeshBasicMaterial( { color: 0x006666 } ));
-
-    character = person;
 
     //setPositionArrow(1, 1);
 
-    arrow.position.y = 3;
-
-    //Init position 
-    board.position.x = 0;
-    board.position.y = 0;
-    board.position.z = 0;
+    arrow.position.y = 10;
 
     person.position.x = 5;
     person.position.z = 5;
@@ -85,20 +95,38 @@ function init(){
     arrow.position.z = person.position.z;
 
     //Add cube to scene
-    scene.add(board);
     scene.add(arrow);
     scene.add(person);
 
     //Coor position camera
-    camera.position.y = 50;
-    camera.position.z = 50;
-    camera.position.x = 0;
+    camera.position.y = 40;
+    camera.position.z = 30;
+    camera.position.x = 10;
 
-    camera.rotation.x = -0.7;
+    camera.rotation.x = -1;
 
     renderer.render( scene, camera );
 
     generateMenuBattle();
+
+    raycaster = new THREE.Raycaster();
+    mouse = new THREE.Vector2();
+
+    renderer.domElement.addEventListener("click", onClick, true);
+
+    function onClick(event){
+
+        event.preventDefault();
+
+        mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
+        mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
+    
+        raycaster.setFromCamera(mouse, camera);
+        var intersects = raycaster.intersectObjects(scene.children); //array
+        
+        console.log(intersects[0].object.position.x + ' ' + intersects[0].object.position.z);
+    
+    }
 
 }
 
@@ -184,27 +212,23 @@ function controllersCursorOnBoard(event){
         
     //Key A
     if (keyCode == 65) {
-        arrow.position.x = arrow.position.x - 2;
-/*         checkBox(arrow.position.x + 11, arrow.position.z + 11);
- */        console.log(backX + ' ' + backY);
+        arrow.position.x = arrow.position.x - 1;
+        console.log(backX + ' ' + backY);
     }
     //Key W
     if (keyCode == 87) {
-        arrow.position.z = arrow.position.z - 2;
-/*         checkBox(arrow.position.x + 11, arrow.position.z + 11);
- */        console.log(backX + ' ' + backY);
+        arrow.position.z = arrow.position.z - 1;
+        console.log(backX + ' ' + backY);
     }
     //Key D
     if (keyCode == 68) {
-        arrow.position.x = arrow.position.x + 2;
-/*         checkBox(arrow.position.x + 11, arrow.position.z + 11);
- */        console.log(backX + ' ' + backY);
+        arrow.position.x = arrow.position.x + 1;
+        console.log(backX + ' ' + backY);
     }
     //Key S
     if (keyCode == 83) {
-        arrow.position.z = arrow.position.z + 2;
-/*         checkBox(arrow.position.x + 11, arrow.position.z + 11);
- */        console.log(backX + ' ' + backY);
+        arrow.position.z = arrow.position.z + 1;
+        console.log(backX + ' ' + backY);
     }
     //Key O
     if (keyCode == 79) {
