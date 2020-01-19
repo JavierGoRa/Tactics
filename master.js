@@ -16,6 +16,7 @@ var codeSelector = 2;
 var arrowOnX, arrowOnZ;
 var velocityMove;
 var raycaster, mouse;
+var arrowMoveUp;
 
 init();
 animate();
@@ -47,14 +48,27 @@ function init(){
     //create camera perspective and scene of window
     mainMenu = new THREE.Scene();
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
-    renderer = new THREE.WebGLRenderer();
+    camera = new THREE.OrthographicCamera( window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000 );
+
+    //Coor position camera
+    camera.position.y = 40;
+    camera.position.z = 0;
+    camera.position.x = 10;
+
+    camera.rotation.x = -1;
+
+    renderer = new THREE.WebGLRenderer({
+        alpha: true
+    });
+    renderer.setClearColor(0x000000, 0);
+
     renderer.setSize( window.innerWidth, window.innerHeight );
     document.body.appendChild( renderer.domElement );
 
 
-    //set propierties cube
-
+/*     var texture = new THREE.TextureLoader().load( "src/textures/" + color + ".png" );
+    var loadWindow = new THREE.Mesh(new THREE.BoxGeometry( window.innerWidth, 0, window.innerHeight), new THREE.MeshBasicMaterial( { color: 0xffffff, map: texture } ));
+ */
 
     //Creating the battlefield with a matrix
     var board = [];
@@ -81,29 +95,48 @@ function init(){
         }
     }
 
-    arrow = new THREE.Mesh(new THREE.BoxGeometry( 0.5, 5, 0.5), new THREE.MeshBasicMaterial( { color: 0x666666 } ));
-    person = new THREE.Mesh(new THREE.BoxGeometry( 1, 7, 1), new THREE.MeshBasicMaterial( { color: 0x006666 } ));
+    for (let index = 0; index < 12; index++) {
+        var person = new THREE.Mesh(new THREE.BoxGeometry( 1, 7, 1), new THREE.MeshBasicMaterial( { color: 0x006666 } ));
+        var pass = false;
 
-    //setPositionArrow(1, 1);
+        while (pass == false) {
+        
+            var xPerson = Math.floor(Math.random() * 20);
+            var yPerson = Math.floor(Math.random() * 20);
 
-    arrow.position.y = 10;
+            if (board[xPerson][yPerson] != null) {
+                pass = true;
+            }
 
-    person.position.x = 5;
-    person.position.z = 5;
+        }
+        
+        person.position.x = xPerson;
+        person.position.y = 10;
+        person.position.z = yPerson;
+        scene.add(person);       
 
-    arrow.position.x = person.position.x;
-    arrow.position.z = person.position.z;
+    }
+
+    
+    texture = new THREE.TextureLoader().load( "src/textures/arrow.png" );
+    arrow = new THREE.Mesh(new THREE.BoxGeometry( 0.5, 0.1, 1), new THREE.MeshBasicMaterial( { color: 0x666666, map: texture, transparent: true } ));
+    texture = new THREE.TextureLoader().load( "src/textures/selector.png" );
+    selector = new THREE.Mesh(new THREE.BoxGeometry( 1, 1, 1), new THREE.MeshBasicMaterial( { color: 0x666666, map: texture, transparent: true } ));
+ 
+
+    arrow.position.y = 15;
+    arrow.position.x = 5;
+    arrow.position.z = 5;
+
+    selector.position.x = arrow.position.x;
+    selector.position.y = 10;
+    selector.position.z = arrow.position.z;
 
     //Add cube to scene
     scene.add(arrow);
-    scene.add(person);
+    scene.add(selector);
 
-    //Coor position camera
-    camera.position.y = 40;
-    camera.position.z = 30;
-    camera.position.x = 10;
-
-    camera.rotation.x = -1;
+    camera.lookAt(arrow.position);
 
     renderer.render( scene, camera );
 
@@ -125,7 +158,13 @@ function init(){
         var intersects = raycaster.intersectObjects(scene.children); //array
         
         console.log(intersects[0].object.position.x + ' ' + intersects[0].object.position.z);
-    
+
+        arrow.position.x = intersects[0].object.position.x;
+        arrow.position.z = intersects[0].object.position.z;
+
+        selector.position.x = arrow.position.x;
+        selector.position.z = arrow.position.z;
+
     }
 
 }
@@ -154,7 +193,17 @@ function animate() {
 
     requestAnimationFrame(animate);
 
-    arrow.rotation.y = arrow.rotation.y + 0.03;
+    if (arrow.position.y >= 14) {
+        arrowMoveUp = false;
+    } else if(arrow.position.y <= 13) {
+        arrowMoveUp = true;
+    }
+
+    if (arrowMoveUp == true) {
+        arrow.position.y = arrow.position.y + 0.025;
+    } else {
+        arrow.position.y = arrow.position.y - 0.025;
+    }
 
     renderer.render(scene,camera);
 
@@ -212,36 +261,42 @@ function controllersCursorOnBoard(event){
         
     //Key A
     if (keyCode == 65) {
-        arrow.position.x = arrow.position.x - 1;
+        camera.position.x = camera.position.x - 1;
         console.log(backX + ' ' + backY);
     }
     //Key W
     if (keyCode == 87) {
-        arrow.position.z = arrow.position.z - 1;
+        camera.position.z = camera.position.z - 1;
         console.log(backX + ' ' + backY);
     }
     //Key D
     if (keyCode == 68) {
-        arrow.position.x = arrow.position.x + 1;
+        camera.position.x = camera.position.x + 1;
         console.log(backX + ' ' + backY);
     }
     //Key S
     if (keyCode == 83) {
-        arrow.position.z = arrow.position.z + 1;
+        camera.position.z = camera.position.z + 1;
         console.log(backX + ' ' + backY);
     }
     //Key O
     if (keyCode == 79) {
-        document.removeEventListener("keydown", controllersCursorOnBoard, false);
+        camera.position.y = camera.position.y + 1;
+
+        /* document.removeEventListener("keydown", controllersCursorOnBoard, false);
         document.addEventListener("keydown", controllersCursorOnMenuBattle, false);
         codeSelector = 2;
         selectorMenuBattle.position.y = codeSelector * 5 + 20;
         scene.add(menuBattle);
-        scene.add(selectorMenuBattle);
+        scene.add(selectorMenuBattle); */
+    }
+    //Key P
+    if (keyCode == 80) {
+        camera.position.y = camera.position.y - 1;
+
     }
     //Key ESC => SHOW PAUSE MENU
     if (keyCode == 27) {
-        alert('hola');
         scene.remove(board);
         scene.remove(arrow);
         scene.remove(person);    
