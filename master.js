@@ -48,14 +48,14 @@ function init(){
     //create camera perspective and scene of window
     mainMenu = new THREE.Scene();
     scene = new THREE.Scene();
-    camera = new THREE.OrthographicCamera( window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 1, 1000 );
+    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
 
     //Coor position camera
-    camera.position.y = 40;
-    camera.position.z = 0;
+    camera.position.y = 30;
+    camera.position.z = 30;
     camera.position.x = 10;
 
-    camera.rotation.x = -1;
+    camera.rotation.x = -0.7;
 
     renderer = new THREE.WebGLRenderer({
         alpha: true
@@ -95,7 +95,7 @@ function init(){
         }
     }
 
-    for (let index = 0; index < 12; index++) {
+    /* for (let index = 0; index < 12; index++) {
         var person = new THREE.Mesh(new THREE.BoxGeometry( 1, 7, 1), new THREE.MeshBasicMaterial( { color: 0x006666 } ));
         var pass = false;
 
@@ -115,7 +115,7 @@ function init(){
         person.position.z = yPerson;
         scene.add(person);       
 
-    }
+    } */
 
     
     texture = new THREE.TextureLoader().load( "src/textures/arrow.png" );
@@ -136,8 +136,8 @@ function init(){
     scene.add(arrow);
     scene.add(selector);
 
-    camera.lookAt(arrow.position);
-
+/*     camera.lookAt(arrow.position);
+ */
     renderer.render( scene, camera );
 
     generateMenuBattle();
