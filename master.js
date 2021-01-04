@@ -118,8 +118,17 @@ function init(){
     } */
 
     
+    //Subject test
+    var person = new THREE.Mesh(new THREE.BoxGeometry( 1, 4, 1), new THREE.MeshBasicMaterial( { color: 0x006666 } ));
+
+    person.position.x = 5;
+    person.position.y = 10;
+    person.position.z = 15;
+    scene.add(person);   
+    //^^^^^^^^^^
+    
     texture = new THREE.TextureLoader().load( "src/textures/arrow.png" );
-    arrow = new THREE.Mesh(new THREE.BoxGeometry( 0.5, 0.1, 1), new THREE.MeshBasicMaterial( { color: 0x666666, map: texture, transparent: true } ));
+    arrow = new THREE.Mesh(new THREE.BoxGeometry( 0.5, 0.001, 1), new THREE.MeshBasicMaterial( { color: 0x666666, map: texture, transparent: true } ));
     texture = new THREE.TextureLoader().load( "src/textures/selector.png" );
     selector = new THREE.Mesh(new THREE.BoxGeometry( 1, 1, 1), new THREE.MeshBasicMaterial( { color: 0x666666, map: texture, transparent: true } ));
  
@@ -127,6 +136,9 @@ function init(){
     arrow.position.y = 15;
     arrow.position.x = 5;
     arrow.position.z = 5;
+
+    arrow.rotation.x = 0.7;
+
 
     selector.position.x = arrow.position.x;
     selector.position.y = 10;
@@ -177,12 +189,16 @@ function generateMenuBattle(){
     menuBattle.position.x = 0;
     menuBattle.position.y = 25;
 
+    scene.add(menuBattle);
+
     texture = new THREE.TextureLoader().load( "src/textures/menuBattleSelector.png" );
     selectorMenuBattle = new THREE.Mesh(new THREE.BoxGeometry( 20, 5, 0), new THREE.MeshBasicMaterial( { color: 0xffffff,transparent: true, map: texture } ));
 
     selectorMenuBattle.position.x = 0;
     selectorMenuBattle.position.y = menuBattle.position.y + 5;
     selectorMenuBattle.position.z = 0.5;
+
+    scene.add(selectorMenuBattle); //temp
 
     renderer.render(scene);
 
