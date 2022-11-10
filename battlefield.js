@@ -19,20 +19,20 @@ renderer.render( scene, camera );
 
 
 //Animation arrow
-function indexlightningBattlefield(weapon) {
+function indexlightningBattlefield(pj) {
 
     if (arrayLightningZones.length == 0) {
         
-        for (let index = 0; index < weapon.distance; index++) {
+        for (let index = 0; index < pj.weapon.distance; index++) {
 
             for (let iZ = 0; iZ < index + 1; iZ++) {
                     
                 cube = new THREE.Mesh(new THREE.BoxGeometry( 1, 1, 1), new THREE.MeshBasicMaterial( {opacity: 0.3, transparent: true, color: 0x0000ff } ));
                 
-                cube.position.x = arrow.position.x + iZ ;
+                cube.position.x = pj.plane.position.x + iZ ;
                 cube.position.y = 10.10;
-                cube.position.z = arrow.position.z - index + weapon.distance  ;
-                cube.name = 'board';
+                cube.position.z = pj.plane.position.z - index + pj.weapon.distance  ;
+                cube.name = 'attack';
 
                 const resultX = arrayField.find(tempCube => tempCube.position.x == cube.position.x);
                 const resultZ = arrayField.find(tempCube => tempCube.position.z == cube.position.z);
@@ -48,10 +48,10 @@ function indexlightningBattlefield(weapon) {
                 
                 cube = new THREE.Mesh(new THREE.BoxGeometry( 1, 1, 1), new THREE.MeshBasicMaterial( {opacity: 0.3, transparent: true, color: 0x0000ff } ));
                 
-                cube.position.x = arrow.position.x + index - weapon.distance;
+                cube.position.x = pj.plane.position.x + index - pj.weapon.distance;
                 cube.position.y = 10.10;
-                cube.position.z = arrow.position.z  + iZ ;
-                cube.name = 'board';
+                cube.position.z = pj.plane.position.z  + iZ ;
+                cube.name = 'attack';
 
                 const resultX = arrayField.find(tempCube => tempCube.position.x == cube.position.x);
                 const resultZ = arrayField.find(tempCube => tempCube.position.z == cube.position.z);
@@ -67,10 +67,10 @@ function indexlightningBattlefield(weapon) {
                 
                 cube = new THREE.Mesh(new THREE.BoxGeometry( 1, 1, 1), new THREE.MeshBasicMaterial( {opacity: 0.3, transparent: true, color: 0x0000ff } ));
                 
-                cube.position.x = arrow.position.x - iZ;
+                cube.position.x = pj.plane.position.x - iZ;
                 cube.position.y = 10.10;
-                cube.position.z = arrow.position.z  + index - weapon.distance ;
-                cube.name = 'board';
+                cube.position.z = pj.plane.position.z  + index - pj.weapon.distance ;
+                cube.name = 'attack';
 
                 const resultX = arrayField.find(tempCube => tempCube.position.x == cube.position.x);
                 const resultZ = arrayField.find(tempCube => tempCube.position.z == cube.position.z);
@@ -86,10 +86,10 @@ function indexlightningBattlefield(weapon) {
                 
                 cube = new THREE.Mesh(new THREE.BoxGeometry( 1, 1, 1), new THREE.MeshBasicMaterial( {opacity: 0.3, transparent: true, color: 0x0000ff } ));
                 
-                cube.position.x = arrow.position.x - index + weapon.distance;
+                cube.position.x = pj.plane.position.x - index + pj.weapon.distance;
                 cube.position.y = 10.10;
-                cube.position.z = arrow.position.z  - iZ ;
-                cube.name = 'board';
+                cube.position.z = pj.plane.position.z  - iZ ;
+                cube.name = 'attack';
 
                 const resultX = arrayField.find(tempCube => tempCube.position.x == cube.position.x);
                 const resultZ = arrayField.find(tempCube => tempCube.position.z == cube.position.z);
@@ -105,4 +105,97 @@ function indexlightningBattlefield(weapon) {
         }
         
     }
+}
+
+
+
+//Animation arrow
+function indexlightningBattlefieldMovement(pj) {
+
+    console.log('indexlightningBattlefieldMovement START');
+    if (arrayLightningZones.length == 0) {
+        
+        for (let index = 0; index < pj.movility; index++) {
+
+            for (let iZ = 0; iZ < index + 1; iZ++) {
+                    
+                cube = new THREE.Mesh(new THREE.BoxGeometry( 1, 1, 1), new THREE.MeshBasicMaterial( {opacity: 0.3, transparent: true, color: 0x0000ff } ));
+                
+                cube.position.x = pj.plane.position.x + iZ ;
+                cube.position.y = 10.10;
+                cube.position.z = pj.plane.position.z - index + pj.movility  ;
+                cube.name = 'movement';
+
+                const resultX = arrayField.find(tempCube => tempCube.position.x == cube.position.x);
+                const resultZ = arrayField.find(tempCube => tempCube.position.z == cube.position.z);
+
+                if (resultX && resultZ) {
+                    scene.add(cube);
+                    arrayLightningZones.push(cube);
+                }
+
+            }
+
+            for (let iZ = 0; iZ < index + 1; iZ++) {
+                
+                cube = new THREE.Mesh(new THREE.BoxGeometry( 1, 1, 1), new THREE.MeshBasicMaterial( {opacity: 0.3, transparent: true, color: 0x0000ff } ));
+                
+                cube.position.x = pj.plane.position.x + index - pj.movility;
+                cube.position.y = 10.10;
+                cube.position.z = pj.plane.position.z  + iZ ;
+                cube.name = 'movement';
+
+                const resultX = arrayField.find(tempCube => tempCube.position.x == cube.position.x);
+                const resultZ = arrayField.find(tempCube => tempCube.position.z == cube.position.z);
+
+                if (resultX && resultZ) {
+                    scene.add(cube);
+                    arrayLightningZones.push(cube);
+                }
+                
+            }
+
+            for (let iZ = 0; iZ < index + 1; iZ++) {
+                
+                cube = new THREE.Mesh(new THREE.BoxGeometry( 1, 1, 1), new THREE.MeshBasicMaterial( {opacity: 0.3, transparent: true, color: 0x0000ff } ));
+                
+                cube.position.x = pj.plane.position.x - iZ;
+                cube.position.y = 10.10;
+                cube.position.z = pj.plane.position.z  + index - pj.movility ;
+                cube.name = 'movement';
+
+                const resultX = arrayField.find(tempCube => tempCube.position.x == cube.position.x);
+                const resultZ = arrayField.find(tempCube => tempCube.position.z == cube.position.z);
+
+                if (resultX && resultZ) {
+                    scene.add(cube);
+                    arrayLightningZones.push(cube);
+                }
+                
+            }
+
+            for (let iZ = 0; iZ < index + 1; iZ++) {
+                
+                cube = new THREE.Mesh(new THREE.BoxGeometry( 1, 1, 1), new THREE.MeshBasicMaterial( {opacity: 0.3, transparent: true, color: 0x0000ff } ));
+                
+                cube.position.x = pj.plane.position.x - index + pj.movility;
+                cube.position.y = 10.10;
+                cube.position.z = pj.plane.position.z  - iZ ;
+                cube.name = 'movement';
+
+                const resultX = arrayField.find(tempCube => tempCube.position.x == cube.position.x);
+                const resultZ = arrayField.find(tempCube => tempCube.position.z == cube.position.z);
+
+                if (resultX && resultZ) {
+                    scene.add(cube);
+                    arrayLightningZones.push(cube);
+                }
+                
+            }
+            
+
+        }
+        
+    }
+    console.log('indexlightningBattlefieldMovement END');
 }

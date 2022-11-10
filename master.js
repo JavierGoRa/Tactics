@@ -6,6 +6,7 @@
 */
 var json_battle1 = 
 {
+    "type": "pj",
     "id": 1,
     "team": 1,
     "defeat": false,
@@ -38,11 +39,13 @@ var json_battle1 =
         },
         "reaction": "Counter attack",
         "support": "Spiritual peace"
-    }       
+    },
+    "plane":''
 };
 
 var json_battle2 = 
 {
+    "type": "pj",
     "id": 2,
     "team": 0,
     "defeat": false,
@@ -78,16 +81,18 @@ var json_battle2 =
     },
     "weapon":{
         "property":["arround"],
+        "damage":23,
         "test":{ 
             "name": "Archery",
             "habilities": ["Accumulate", "Immobilize"]
         },
         "distance": 3
-    }
+    },
+    "plane":''
 };
 var json_battle = [];
-json_battle.push(json_battle2);
 json_battle.push(json_battle1);
+json_battle.push(json_battle2);
 
 var scene, camera, renderer;
 var arrow;
@@ -99,16 +104,31 @@ var texture;
 var menuBattle;
 var codeSelector = 2;
 var arrowOnX, arrowOnZ;
-var velocityMove;
+var velocityMove = 0.5;
 var raycaster, mouse;
 var arrowMoveUp;
 var arrayPersons = [];
 var arrayLightningZones = [];
 var arrayField = [];
 var arrayActions = [];
-var actualTurn = json_battle2;
-
+var actualTurn = json_battle[1];
+var velocidad = 0;
+var aceleracion = 0;
+var rozamiento = 0.1;
+const clock = new THREE.Clock();
+const delta = clock.getDelta();
 console.log(json_battle);
+var board = [];
+
+var fate = {"position":{"x":null, "z":null}};
+
+
+var arrayHistorialTurn = [];
+
+var arrayActualTurn = [];
+var arrayNextTurns = [];
+
+
 
 init();
 animate();
@@ -154,7 +174,6 @@ function init(){
     document.body.appendChild( renderer.domElement );
 
     //Creating the battlefield with a matrix
-    var board = [];
     var color = 'black';
     
     for (let x = 0; x < 20; x++) {
@@ -166,12 +185,14 @@ function init(){
             texture = new THREE.TextureLoader().load( "src/textures/" + color + ".png" );
             cube = new THREE.Mesh(new THREE.BoxGeometry( 1, 1, 1), new THREE.MeshBasicMaterial( { color: 0xffffff, map: texture } ));
 
-            board[x][y] = 'hello';
             
             cube.position.x = x;
             cube.position.y = 10;
             cube.position.z = y;
             cube.name = 'board';
+
+            board[x][y] = cube;
+
 
             arrayField.push(cube);
 
@@ -228,15 +249,18 @@ function init(){
 
     // plane
     plane = new THREE.Mesh(new THREE.PlaneGeometry(0.7, 1.25),img);
-    plane.position.set( 20, 11, 20 );
+    plane.position.set( 5, 11, 9 );
     plane.rotation.x = -0.35;
     plane.rotation.y = 0.75;
     plane.rotation.z = 0.25;
     plane.overdraw = true;
     scene.add(plane);
 
+    json_battle[1].plane = plane;
+    board[plane.position.x][plane.position.z].object = json_battle[1];
+
     var img = new THREE.MeshBasicMaterial({ //CHANGED to MeshBasicMaterial color:
-        map:THREE.ImageUtils.loadTexture('src/sprites/hero/fr.png'),
+        map:THREE.ImageUtils.loadTexture('src/sprites/enemy/fl.png'),
         transparent: true
     });
     img.map.needsUpdate = true; //ADDED
@@ -249,6 +273,10 @@ function init(){
     enemy.rotation.z = 0.25;
     enemy.overdraw = true;
     scene.add(enemy);
+
+    json_battle[0].plane = enemy;
+
+    board[enemy.position.x][enemy.position.z].object = json_battle[0];
     
     renderer.render( scene, camera );
     
@@ -331,14 +359,17 @@ function init(){
     renderer.render( scene, camera );
 
 
+    startTurn(json_battle[1]);
+
+
 }
 
 
 function onMouseWheel(event) {
     event.preventDefault();
   
-    camera.zoom -= event.deltaY / 1000;
-    camera.updateProjectionMatrix(); //cambiar velocidad
+    camera.zoom -= event.deltaY / 200;
+    camera.updateProjectionMatrix();
 
 }
 
@@ -355,15 +386,11 @@ function onClick(event){
 
     console.log(intersects[0].object.name);
 
-    switch (intersects[0].object.name) {
+    switch (intersects[0].object.name) {   
         case 'board': //Has selected the table board
+
             arrow.position.x = intersects[0].object.position.x;
             arrow.position.z = intersects[0].object.position.z;
-
-            moveActionsToCursor(intersects[0].object.position.x, intersects[0].object.position.z);
-
-            plane.position.x = intersects[0].object.position.x;
-            plane.position.z = intersects[0].object.position.z;
 
             selector.position.x = arrow.position.x;
             selector.position.z = arrow.position.z;
@@ -380,19 +407,63 @@ function onClick(event){
                     
             break;
             
-        case 'move':
+        case 'actionMove':
 
-            arrowOnX = arrow.position.x;
-            arrowOnZ = arrow.position.z;    
-
-            //corregir
-            animateMovePersonToArrow(1);
+            indexlightningBattlefieldMovement(json_battle[1])
         
             break;
     
         case 'actionFight':
 
-            indexlightningBattlefield(actualTurn.weapon);
+            indexlightningBattlefield(actualTurn);
+        
+            break;
+
+        case 'movement':
+
+            arrow.position.x = intersects[0].object.position.x;
+            arrow.position.z = intersects[0].object.position.z;
+
+            selector.position.x = arrow.position.x;
+            selector.position.z = arrow.position.z;
+
+            fate.position.x = intersects[0].object.position.x;
+            fate.position.z = intersects[0].object.position.z;
+
+            animateMovePersonToArrow();
+        
+            break;
+
+        case 'attack':
+
+            arrow.position.x = intersects[0].object.position.x;
+            arrow.position.z = intersects[0].object.position.z;
+
+            if (board[intersects[0].object.position.x][intersects[0].object.position.z].object.type == 'pj') {
+
+                var checkPJ = json_battle.find(pj => pj.id == board[intersects[0].object.position.x][intersects[0].object.position.z].object.id);
+
+                if (checkPJ) {
+
+                    checkPJ.vit -= actualTurn.weapon.damage;
+                    
+                }
+
+                if(arrayLightningZones.length > 0){
+                
+                    arrayLightningZones.forEach(e => {
+                        scene.remove(e);
+                    });
+                    arrayLightningZones = [];
+            
+                }
+                
+            } else {
+
+                selector.position.x = arrow.position.x;
+                selector.position.z = arrow.position.z;
+                    
+            }
         
             break;
     
@@ -408,6 +479,25 @@ function onClick(event){
 function animate() {
 
     requestAnimationFrame(animate);
+
+    /* velocidad = velocidad + aceleracion;
+    console.log('@@@velocidad ' + velocidad);
+
+    if (velocidad < 0) {
+        
+        camera.zoom -= velocidad;
+        camera.updateProjectionMatrix(); //cambiar velocidad
+
+    }
+
+    if (camera.zoom > 10) {
+        camera.zoom = 10;
+    } else if(camera.zoom < 5){
+        camera.zoom = 5;
+    }
+
+    console.log('@@@camera.zoom ' + camera.zoom); */
+
 
     if (arrow.position.y >= 13) {
         arrowMoveUp = false;
@@ -426,42 +516,64 @@ function animate() {
 }
 
 //animation move person
-function animateMovePersonToArrow(personParam) {
-        
-    if (arrayPersons[personParam].position.x == arrowOnX && arrayPersons[personParam].position.z == arrowOnZ) {
+function animateMovePersonToArrow() {
 
+    console.log('@@fate.position.x ' + fate.position.x);
+    console.log('@@fate.position.z ' + fate.position.z);
+    console.log('@@delta ' + delta);
+    
+    if(arrayLightningZones.length > 0){
+                
+        arrayLightningZones.forEach(e => {
+            scene.remove(e);
+        });
+
+        arrayLightningZones = [];
+
+    }
+        
+    if (actualTurn.plane.position.x == fate.position.x && actualTurn.plane.position.z == fate.position.z) {
+        
         velocityMove = 0;
 
+        moveActionsToCursor(actualTurn.plane.position.x, actualTurn.plane.position.z);
+
     } else {
+    
+        velocityMove = 0.5;
 
-        velocityMove = 0.25;
-
-        if (arrayPersons[personParam].position.x != arrowOnX) {
+        if (actualTurn.plane.position.x != fate.position.x) {
             
-            if (arrayPersons[personParam].position.x > arrowOnX){
-                arrayPersons[personParam].position.x -= velocityMove;
-            } else if (arrayPersons[personParam].position.x < arrowOnX){
-                arrayPersons[personParam].position.x += velocityMove;
+            if (actualTurn.plane.position.x > fate.position.x){
+                actualTurn.plane.position.x -= velocityMove; //velocityMove = 0.05
+            } else if (actualTurn.plane.position.x < fate.position.x){
+                actualTurn.plane.position.x += velocityMove;
             }
-
-        } else if (arrayPersons[personParam].position.z != arrowOnZ) {
             
-            if (arrayPersons[personParam].position.z > arrowOnZ){
-                arrayPersons[personParam].position.z -= velocityMove;
-            } else if (arrayPersons[personParam].position.z < arrowOnZ){
-                arrayPersons[personParam].position.z += velocityMove;
+        } else if (actualTurn.plane.position.z != fate.position.z) {
+
+            if (actualTurn.plane.position.z > fate.position.z){
+                actualTurn.plane.position.z -= velocityMove;
+            } else if (actualTurn.plane.position.z < fate.position.z){
+                actualTurn.plane.position.z += velocityMove;
             }
 
         }
-        
-        requestAnimationFrame(animateMovePersonToArrow)
+
+        console.log('@@actualTurn.plane.position.x ' + plane.position.x);
+        console.log('@@actualTurn.plane.position.z ' + plane.position.z);
+
+        requestAnimationFrame(animateMovePersonToArrow);
+    
+        console.log('moviendo');
+        renderer.render();
 
     }
 
 }
 
 //listener to change screen size
-window.addEventListener( 'resize', onWindowResize, false );
+window.addEventListener( 'resize', onWindowResize, true );
 
 document.addEventListener("keydown", controllersCursorOnBoard, false);
 
