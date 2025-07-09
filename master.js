@@ -110,6 +110,7 @@ var arrowMoveUp;
 var arrayPersons = [];
 var arrayLightningZones = [];
 var arrayField = [];
+var arrayEndsActions = [];
 var arrayActions = [];
 var actualTurn = json_battle[1];
 var velocidad = 0;
@@ -120,8 +121,9 @@ const delta = clock.getDelta();
 console.log(json_battle);
 var board = [];
 
-var fate = {"position":{"x":null, "z":null}};
+var frames = 30;
 
+var fate = {"position":{"x":null, "z":null}};
 
 var arrayHistorialTurn = [];
 
@@ -254,6 +256,7 @@ function init(){
     plane.rotation.y = 0.75;
     plane.rotation.z = 0.25;
     plane.overdraw = true;
+    plane.name = 'PJ';
     scene.add(plane);
 
     json_battle[1].plane = plane;
@@ -272,6 +275,7 @@ function init(){
     enemy.rotation.y = 0.75;
     enemy.rotation.z = 0.25;
     enemy.overdraw = true;
+    enemy.name = 'PJ';
     scene.add(enemy);
 
     json_battle[0].plane = enemy;
@@ -280,83 +284,7 @@ function init(){
     
     renderer.render( scene, camera );
     
-    var bat = new THREE.MeshBasicMaterial({ //CHANGED to MeshBasicMaterial
-        map:THREE.ImageUtils.loadTexture('src/textures/move.png')
-    });
-    bat.map.needsUpdate = true; //ADDED
-    
-    // plane
-    batMesh = new THREE.Mesh(new THREE.CircleGeometry( 0.5, 6 ),bat);
-    batMesh.position.set( 5, 11, 6 );
-    batMesh.rotation.x = -0.35;
-    batMesh.rotation.y = 0.75;
-    batMesh.rotation.z = 0.25;
-    batMesh.overdraw = true;
-    batMesh.name = 'actionMove';
-    scene.add(batMesh);
-
-    arrayActions.push(batMesh);
-    
-    renderer.render( scene, camera );
-
-    var bat = new THREE.MeshBasicMaterial({ //CHANGED to MeshBasicMaterial
-        map:THREE.ImageUtils.loadTexture('src/textures/fight.png')
-    });
-    bat.map.needsUpdate = true; //ADDED
-    
-    // plane
-    batMesh = new THREE.Mesh(new THREE.CircleGeometry( 0.5, 6 ),bat);
-    batMesh.position.set( 6, 11.5, 6 );
-    batMesh.rotation.x = -0.35;
-    batMesh.rotation.y = 0.75;
-    batMesh.rotation.z = 0.25;
-    batMesh.overdraw = true;
-    batMesh.name = 'actionFight';
-    scene.add(batMesh);
-    
-    arrayActions.push(batMesh);
-    
-    renderer.render( scene, camera );
-
-    
-    var bat = new THREE.MeshBasicMaterial({ //CHANGED to MeshBasicMaterial
-        map:THREE.ImageUtils.loadTexture('src/textures/shop.png')
-    });
-    bat.map.needsUpdate = true; //ADDED
-    
-    // plane
-    batMesh = new THREE.Mesh(new THREE.CircleGeometry( 0.5, 6 ),bat);
-    batMesh.position.set( 7, 12, 6 );
-    batMesh.rotation.x = -0.35;
-    batMesh.rotation.y = 0.75;
-    batMesh.rotation.z = 0.25;
-    batMesh.overdraw = true;
-    batMesh.name = 'actionShop';
-    scene.add(batMesh);
-
-    arrayActions.push(batMesh);
-    
-    renderer.render( scene, camera );
-
-    
-    var bat = new THREE.MeshBasicMaterial({ //CHANGED to MeshBasicMaterial
-        map:THREE.ImageUtils.loadTexture('src/textures/next.png')
-    });
-    bat.map.needsUpdate = true; //ADDED
-    
-    // plane
-    batMesh = new THREE.Mesh(new THREE.CircleGeometry( 0.5, 6 ),bat);
-    batMesh.position.set( 8, 12.5, 6 );
-    batMesh.rotation.x = -0.35;
-    batMesh.rotation.y = 0.75;
-    batMesh.rotation.z = 0.25;
-    batMesh.overdraw = true;
-    batMesh.name = 'actionWait';
-    scene.add(batMesh);
-
-    arrayActions.push(batMesh);
-    
-    renderer.render( scene, camera );
+    generateActions();
 
 
     startTurn(json_battle[1]);
@@ -367,8 +295,12 @@ function init(){
 
 function onMouseWheel(event) {
     event.preventDefault();
-  
-    camera.zoom -= event.deltaY / 200;
+    if (camera.zoom - event.deltaY / 200 <= 2) {
+        camera.zoom = 2;
+    } else {
+        camera.zoom -= event.deltaY / 200;
+    }
+    console.log(camera.zoom);
     camera.updateProjectionMatrix();
 
 }
@@ -429,8 +361,15 @@ function onClick(event){
 
             fate.position.x = intersects[0].object.position.x;
             fate.position.z = intersects[0].object.position.z;
+            setTimeout( function() {
 
-            animateMovePersonToArrow();
+                animateMovePersonToArrow();
+
+            }, 1000 / 2 );
+
+            arrayEndsActions.push('Movement');
+
+            generateActions();
         
             break;
 
@@ -439,7 +378,7 @@ function onClick(event){
             arrow.position.x = intersects[0].object.position.x;
             arrow.position.z = intersects[0].object.position.z;
 
-            if (board[intersects[0].object.position.x][intersects[0].object.position.z].object.type == 'pj') {
+            if (board[intersects[0].object.position.x][intersects[0].object.position.z].object.type == 'pj' || intersects[0].object.name == 'PJ') {
 
                 var checkPJ = json_battle.find(pj => pj.id == board[intersects[0].object.position.x][intersects[0].object.position.z].object.id);
 
@@ -457,6 +396,13 @@ function onClick(event){
                     arrayLightningZones = [];
             
                 }
+
+                arrayEndsActions.push('Attack');
+
+                generateActions();
+
+                moveActionsToCursor(actualTurn.plane.position.x, actualTurn.plane.position.z);
+
                 
             } else {
 
@@ -464,8 +410,9 @@ function onClick(event){
                 selector.position.z = arrow.position.z;
                     
             }
-        
+
             break;
+            
     
         default:
             break;
@@ -478,8 +425,11 @@ function onClick(event){
 //Animation arrow
 function animate() {
 
-    requestAnimationFrame(animate);
+    setTimeout( function() {
 
+        requestAnimationFrame(animate);
+
+    }, 1000 / this.frames );
     /* velocidad = velocidad + aceleracion;
     console.log('@@@velocidad ' + velocidad);
 
@@ -540,7 +490,7 @@ function animateMovePersonToArrow() {
 
     } else {
     
-        velocityMove = 0.5;
+        velocityMove = 0.125;
 
         if (actualTurn.plane.position.x != fate.position.x) {
             
@@ -559,13 +509,13 @@ function animateMovePersonToArrow() {
             }
 
         }
+            
+        setTimeout( function() {
 
-        console.log('@@actualTurn.plane.position.x ' + plane.position.x);
-        console.log('@@actualTurn.plane.position.z ' + plane.position.z);
+            requestAnimationFrame(animateMovePersonToArrow);
 
-        requestAnimationFrame(animateMovePersonToArrow);
+        }, 1000 / this.frames );
     
-        console.log('moviendo');
         renderer.render();
 
     }
