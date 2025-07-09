@@ -34,8 +34,26 @@ function indexlightningBattlefield(pj) {
                 cube.position.z = pj.plane.position.z - index + pj.weapon.distance  ;
                 cube.name = 'attack';
 
-                const resultX = arrayField.find(tempCube => tempCube.position.x == cube.position.x);
-                const resultZ = arrayField.find(tempCube => tempCube.position.z == cube.position.z);
+                var resultX = arrayField.find(tempCube => tempCube.position.x == cube.position.x);
+                var resultZ = arrayField.find(tempCube => tempCube.position.z == cube.position.z);
+
+                
+                if (resultX && resultZ) {
+                    scene.add(cube);
+                    arrayLightningZones.push(cube);
+                }
+
+
+                cube = new THREE.Mesh(new THREE.BoxGeometry( 0.5, 2.5, 0.5), new THREE.MeshBasicMaterial( {opacity: 0.3, transparent: true, color: 0x00ff00, opacity:0 } ));
+                
+                cube.position.x = pj.plane.position.x + iZ 
+                cube.position.y = 10.10;
+                cube.position.z = pj.plane.position.z - index + pj.weapon.distance ;
+                cube.name = 'attack';
+
+                var resultX = arrayField.find(tempCube => tempCube.position.x == cube.position.x);
+                var resultZ = arrayField.find(tempCube => tempCube.position.z == cube.position.z);
+                
 
                 if (resultX && resultZ) {
                     scene.add(cube);
@@ -53,8 +71,8 @@ function indexlightningBattlefield(pj) {
                 cube.position.z = pj.plane.position.z  + iZ ;
                 cube.name = 'attack';
 
-                const resultX = arrayField.find(tempCube => tempCube.position.x == cube.position.x);
-                const resultZ = arrayField.find(tempCube => tempCube.position.z == cube.position.z);
+                var resultX = arrayField.find(tempCube => tempCube.position.x == cube.position.x);
+                var resultZ = arrayField.find(tempCube => tempCube.position.z == cube.position.z);
 
                 if (resultX && resultZ) {
                     scene.add(cube);
@@ -72,8 +90,9 @@ function indexlightningBattlefield(pj) {
                 cube.position.z = pj.plane.position.z  + index - pj.weapon.distance ;
                 cube.name = 'attack';
 
-                const resultX = arrayField.find(tempCube => tempCube.position.x == cube.position.x);
-                const resultZ = arrayField.find(tempCube => tempCube.position.z == cube.position.z);
+                var resultX = arrayField.find(tempCube => tempCube.position.x == cube.position.x);
+                var resultZ = arrayField.find(tempCube => tempCube.position.z == cube.position.z);
+                
 
                 if (resultX && resultZ) {
                     scene.add(cube);
@@ -91,8 +110,8 @@ function indexlightningBattlefield(pj) {
                 cube.position.z = pj.plane.position.z  - iZ ;
                 cube.name = 'attack';
 
-                const resultX = arrayField.find(tempCube => tempCube.position.x == cube.position.x);
-                const resultZ = arrayField.find(tempCube => tempCube.position.z == cube.position.z);
+                var resultX = arrayField.find(tempCube => tempCube.position.x == cube.position.x);
+                var resultZ = arrayField.find(tempCube => tempCube.position.z == cube.position.z);
 
                 if (resultX && resultZ) {
                     scene.add(cube);
@@ -126,8 +145,8 @@ function indexlightningBattlefieldMovement(pj) {
                 cube.position.z = pj.plane.position.z - index + pj.movility  ;
                 cube.name = 'movement';
 
-                const resultX = arrayField.find(tempCube => tempCube.position.x == cube.position.x);
-                const resultZ = arrayField.find(tempCube => tempCube.position.z == cube.position.z);
+                var resultX = arrayField.find(tempCube => tempCube.position.x == cube.position.x);
+                var resultZ = arrayField.find(tempCube => tempCube.position.z == cube.position.z);
 
                 if (resultX && resultZ) {
                     scene.add(cube);
@@ -145,8 +164,8 @@ function indexlightningBattlefieldMovement(pj) {
                 cube.position.z = pj.plane.position.z  + iZ ;
                 cube.name = 'movement';
 
-                const resultX = arrayField.find(tempCube => tempCube.position.x == cube.position.x);
-                const resultZ = arrayField.find(tempCube => tempCube.position.z == cube.position.z);
+                var resultX = arrayField.find(tempCube => tempCube.position.x == cube.position.x);
+                var resultZ = arrayField.find(tempCube => tempCube.position.z == cube.position.z);
 
                 if (resultX && resultZ) {
                     scene.add(cube);
@@ -164,8 +183,8 @@ function indexlightningBattlefieldMovement(pj) {
                 cube.position.z = pj.plane.position.z  + index - pj.movility ;
                 cube.name = 'movement';
 
-                const resultX = arrayField.find(tempCube => tempCube.position.x == cube.position.x);
-                const resultZ = arrayField.find(tempCube => tempCube.position.z == cube.position.z);
+                var resultX = arrayField.find(tempCube => tempCube.position.x == cube.position.x);
+                var resultZ = arrayField.find(tempCube => tempCube.position.z == cube.position.z);
 
                 if (resultX && resultZ) {
                     scene.add(cube);
@@ -183,8 +202,8 @@ function indexlightningBattlefieldMovement(pj) {
                 cube.position.z = pj.plane.position.z  - iZ ;
                 cube.name = 'movement';
 
-                const resultX = arrayField.find(tempCube => tempCube.position.x == cube.position.x);
-                const resultZ = arrayField.find(tempCube => tempCube.position.z == cube.position.z);
+                var resultX = arrayField.find(tempCube => tempCube.position.x == cube.position.x);
+                var resultZ = arrayField.find(tempCube => tempCube.position.z == cube.position.z);
 
                 if (resultX && resultZ) {
                     scene.add(cube);
